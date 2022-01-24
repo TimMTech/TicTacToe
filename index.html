@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header id="header">
+        <h1>Tic-Tac-Toe</h1>
+    </header>
+    <div id="player-entries">
+        <div class="player-one-container">
+            <h2>Player One (X's)</h2>
+            <input type="text" name="player-one" id="player-one">
+        </div>
+        <div class="player-two-container">
+            <h2>Player Two (O's)</h2>
+            <input type="text" name="player-two" id="player-two">
+        </div>
+    </div>
+    <div class="entry-button">
+        <button id="player-info-save">Enter</button>
+    </div>
+    <div class="name-container">
+        <div id="player-one-name"></div>
+        <p>vs</p>
+        <div id="player-two-name"></div>
+    </div>
+    <div id="warning-message"></div>
+    <main id="main-board">
+        <div id="row-one">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div id="row-two">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div id="row-three">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div class="winner"></div>
+        <button class="reset">Reset</button>
+    </main>
+    <footer id="footer">
+        <div class="copyright">&#169 Tim Mukhamedov 2022</div>
+    </footer>
+
+</body>
+
+</html>
