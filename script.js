@@ -22,6 +22,7 @@ const playerSubmit = document.getElementById('player-info-save')
 const playerOneParticipant = document.getElementById('player-one-name')
 const playerTwoParticipant = document.getElementById('player-two-name')
 const warningMessage = document.getElementById('warning-message')
+const reachedFive = document.querySelector('.reached-five')
 
 let circleTurn;
 
@@ -34,7 +35,7 @@ let getPlayerInfo = () => {
     cellElements.forEach((cell) => {
         cell.removeEventListener('click', handleClick);
     })
-    playerSubmit.addEventListener('click', () => {
+    playerSubmit.addEventListener('click', (e) => {
         playerOneEntry = document.getElementById('player-one').value
         playerTwoEntry = document.getElementById('player-two').value
         playerOneParticipant.textContent = playerOneEntry;
@@ -50,6 +51,7 @@ let checkPlayerInfo = () => {
             warningMessage.textContent = '';
             document.getElementById('player-one').value = '';
             document.getElementById('player-two').value = '';
+            playerSubmit.style.pointerEvents = 'none'
         })
     } else {
         warningMessage.textContent = '*Please Fill Both Fields'
@@ -69,9 +71,13 @@ let handleClick = (e) => {
         playerMarkStyle(cell, 'red')
     }
     if (checkWin(playerOne)) {
-        gameDeclaration(false)
+        gameDeclaration(false);
+        playerOneScore++
+        scoreBoard()
     } else if (checkWin(playerTwo)) {
         gameDeclaration(false);
+        playerTwoScore++
+        scoreBoard()
     } else if (drawGame()) {
         gameDeclaration(true)
     } else {
@@ -90,7 +96,7 @@ let gameDeclaration = (draw) => {
     if (draw) {
         winningDiv.textContent = 'Draw Game';
     } else {
-        winningDiv.textContent = `${circleTurn ? playerTwoParticipant.textContent : playerOneParticipant.textContent} Wins!`
+        winningDiv.textContent = `${circleTurn ? playerTwoParticipant.textContent : playerOneParticipant.textContent} Wins Round!`
         cellElements.forEach((cell) => {
             cell.style.pointerEvents = 'none'
         })
@@ -117,11 +123,38 @@ let resetGame = () => {
         cell.classList.remove(playerOne)
         cell.classList.remove(playerTwo)
         winningDiv.textContent = ''
+        reachedFive.textContent = ''
         cell.textContent = ''
         cell.addEventListener('click', handleClick, { once: true })
         cell.style.pointerEvents = 'auto'
     })
 }
+
+
+let scoreBoard = () => {
+    let scoreOne = document.getElementById('player-score-one');
+    scoreOne.textContent = playerOneScore;
+    let scoreTwo = document.getElementById('player-score-two');
+    scoreTwo.textContent = playerTwoScore;
+    roundReset(scoreOne, scoreTwo)
+}
+
+let roundReset = (scoreOne, scoreTwo) => {
+    if (playerOneScore == 5) {
+        scoreOne.textContent = '0'
+        scoreTwo.textContent = '0'
+        winningDiv.textContent = ''
+        reachedFive.textContent = `${playerOneParticipant.textContent} WON THE GAME!!`
+        playerOneScore = 0
+    } else if (playerTwoScore == 5) {
+        scoreOne.textContent = '0'
+        scoreTwo.textContent = '0'
+        winningDiv.textContent = ''
+        reachedFive.textContent = `${playerTwoParticipant.textContent} WON THE GAME!!`
+        playerTwoScore = 0
+    }
+}
+
 
 
 
