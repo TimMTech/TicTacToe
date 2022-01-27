@@ -1,6 +1,6 @@
 const playerOne = 'X';
 const playerTwo = 'O';
-const computer = 'O'
+
 
 let playerOneScore = 0;
 let playerTwoScore = 0;
@@ -31,6 +31,7 @@ const reachedFive = document.querySelector('.reached-five')
 const gridArray = Array.from(cellElements);
 let circleTurn;
 let tracking = [1,2,3,4,5,6,7,8,9];
+
 
 let playerMarkStyle = (cell, color) => {
     const markColor = cell.style;
@@ -174,14 +175,24 @@ resetButton.addEventListener('click', resetGame)
 getPlayerInfo()
 
 // COMPUTER IMPLEMENTATION
-
+const computer = 'O';
 
 let computerPlayer = () => {
     toggleAi.onclick = () => {
         toggleAi.onclick = 'disabled'
         computerDisplay()
         versusComputer()
+        resetButton.addEventListener('click', resetComputerGame)
     }
+}
+
+let resetComputerGame = () => {
+    cellElements.forEach((cell) => {
+        cell.classList.remove(playerOne);
+        cell.classList.remove(computer);
+        cell.textContent = ''
+        cell.addEventListener('click', playerMove, { once: true })
+    })
 }
 
 
@@ -196,17 +207,16 @@ let playerMove = (e) => {
     cell.textContent = playerOne;
     playerMarkStyle(cell, 'red');
     tracking.splice(spliceNr, 1);
-    computerMove()
     }
     if (checkWin(playerOne)) {
         computerDeclaration(false)
         playerOneScore++
-    } else if (checkWin(computer)) {
-        computerDeclaration(false)
-        computerScore++
+    } else if (computerDraw()) {
+        computerDeclaration(true);
+    } else {
+        computerMove()
     }
 }
-
 
 let computerDeclaration = (draw) => {
     if (draw) {
@@ -219,6 +229,13 @@ let computerDeclaration = (draw) => {
     winningDiv.classList.add('show')
 }
 
+let computerDraw = () => {
+    return [...cellElements].every((cell) => {
+        return cell.classList.contains(playerOne) ||
+            cell.classList.contains(computer)
+    })
+}
+
 
 let computerMove = () => {
     const random = Math.floor(Math.random() * tracking.length);
@@ -226,8 +243,14 @@ let computerMove = () => {
     cellElements[computerIndex - 1].classList.add(computer);
     cellElements[computerIndex - 1].textContent = computer;
     tracking.splice(random, 1);
+    if (checkWin(computer)) {
+        computerDeclaration(false)
+        computerScore++
+    }
 }
-    
+
+
+// Display Adjustments For Computer
 
 let computerDisplay = () => {
     removePlayerTwo()
