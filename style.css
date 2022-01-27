@@ -30,6 +30,13 @@
     height: 2rem;
 }
 
+.computer {
+    display: flex;
+    justify-content: center;
+    background-color: lightblue;
+    height: 2rem;
+}
+
 #player-info-save {
     width: 5rem;
     height: 1.5rem;
@@ -41,6 +48,20 @@
 }
 
 #player-info-save:hover {
+    transform: scale(1.2,1.2);
+}
+
+#toggle-ai {
+    width: 5rem;
+    height: 1.5rem;
+    border-radius: 2rem;
+    border: 0.3rem solid black;
+    cursor: pointer;
+    transition: 0.1s;
+    background-color: rgb(225, 241, 247);
+}
+
+#toggle-ai:hover {
     transform: scale(1.2,1.2);
 }
 
