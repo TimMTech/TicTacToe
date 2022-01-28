@@ -1,6 +1,6 @@
 const playerOne = 'X';
 const playerTwo = 'O';
-let mode = false;
+
 
 let playerOneScore = 0;
 let playerTwoScore = 0;
@@ -30,13 +30,13 @@ const reachedFive = document.querySelector('.reached-five')
 
 const gridArray = Array.from(cellElements);
 let circleTurn;
-let tracking = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-
+// Marker Display Options//
 let playerMarkStyle = (cell, color) => {
     const markColor = cell.style;
     markColor.color = `${color}`
 }
+////////////////////////////
 
 let getPlayerInfo = () => {
     cellElements.forEach((cell) => {
@@ -132,13 +132,13 @@ let checkWin = (player) => {
 let resetGame = () => {
     circleTurn = false;
     cellElements.forEach((cell) => {
-    cell.classList.remove(playerOne)
-    cell.classList.remove(playerTwo)
-    winningDiv.textContent = ''
-    reachedFive.textContent = ''
-    cell.textContent = ''
-    cell.addEventListener('click', handleClick, { once: true })
-    cell.style.pointerEvents = 'auto'
+        cell.classList.remove(playerOne)
+        cell.classList.remove(playerTwo)
+        winningDiv.textContent = ''
+        reachedFive.textContent = ''
+        cell.textContent = ''
+        cell.addEventListener('click', handleClick, { once: true })
+        cell.style.pointerEvents = 'auto'
     })
 }
 
@@ -158,12 +158,13 @@ let roundReset = (scoreOne, scoreTwo) => {
         winningDiv.textContent = ''
         reachedFive.textContent = `${playerOneParticipant.textContent} WON THE GAME!!`
         playerOneScore = 0
-    } else if (playerTwoScore == 5) {
+    } else if (playerTwoScore == 5 || computerScore == 5) {
         scoreOne.textContent = '0'
         scoreTwo.textContent = '0'
         winningDiv.textContent = ''
         reachedFive.textContent = `${playerTwoParticipant.textContent} WON THE GAME!!`
         playerTwoScore = 0
+        computerScore = 0
     }
 }
 
@@ -179,7 +180,14 @@ getPlayerInfo()
 
 let computer = 'C';
 
- 
+let tracking = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+let restoreSpliced = () => {
+    tracking.splice(0, tracking.length);
+    tracking.push(1,2,3,4,5,6,7,8,9)
+}
+
+
 toggleAi.onclick = () => {
     toggleAi.onclick = 'disabled'
     computerDisplay()
@@ -189,11 +197,14 @@ toggleAi.onclick = () => {
 }
 
 let resetComputerGame = () => {
-    document.getElementById('toggle-ai').click()
     cellElements.forEach((cell) => {
-        cell.classList.remove(playerOne, computer);
+        cell.classList.remove(computer);
+        cell.classList.remove(playerOne)
         cell.textContent = ''
-        cell.style.pointerEvents = 'auto'
+        winningDiv.textContent = ''
+        reachedFive.textContent = ''
+        restoreSpliced()
+        cell.addEventListener('click', playerMove, { once: true })
         cell.style.pointerEvents = 'auto'
     })
 }
@@ -213,6 +224,7 @@ let playerMove = (e) => {
     if (checkAiWin(playerOne)) {
         computerDeclaration(false)
         playerOneScore++
+        aIScoreBoard()
     } else if (computerDraw()) {
         computerDeclaration(true);
     } else {
@@ -245,15 +257,16 @@ let computerDraw = () => {
 }
 
 let computerMove = () => {
-    console.log('active function')
     const random = Math.floor(Math.random() * tracking.length);
     const computerIndex = tracking[random];
     cellElements[computerIndex - 1].classList.add(computer)
     cellElements[computerIndex - 1].textContent = computer;
+    playerMarkStyle(cellElements[computerIndex - 1], 'blue')
     tracking.splice(random, 1);
     if (checkWin(computer)) {
         computerDeclaration(false)
         computerScore++
+        aIScoreBoard()
     }
 }
 
@@ -266,7 +279,18 @@ let checkAiWin = (player) => {
 }
 
 
+
 // Display Adjustments For Computer
+
+
+let aIScoreBoard = () => {
+    let scoreOne = document.getElementById('player-score-one');
+    scoreOne.textContent = playerOneScore;
+    let scoreTwo = document.getElementById('player-score-two');
+    scoreTwo.textContent = computerScore;
+    roundReset(scoreOne, scoreTwo)
+}
+
 
 let computerDisplay = () => {
     removePlayerTwo()
@@ -281,8 +305,20 @@ let enterAi = () => {
     playerOneEntry = document.getElementById('player-one').value;
     playerOneParticipant.textContent = playerOneEntry;
     playerTwoParticipant.textContent = 'AI';
-    document.getElementById('player-one').value = ''
-    deactivateButtons()
+    if (playerOneParticipant.textContent) {
+        cellElements.forEach((cell) => {
+            cell.addEventListener('click', playerMove, { once: true })
+            warningMessage.textContent = ''
+            document.getElementById('player-one').value = ''
+            deactivateButtons()
+        })
+    } else {
+        cellElements.forEach((cell) => {
+            cell.removeEventListener('click', playerMove);
+        })
+        warningMessage.textContent = '*Please Fill Entries'
+    }
+    
 }
 
 let deactivateButtons = () => {
@@ -301,6 +337,7 @@ let versusComputer = () => {
         cell.addEventListener('click', playerMove, { once: true })
     })
 }
+
 
 
 
