@@ -158,11 +158,14 @@ let roundReset = (scoreOne, scoreTwo) => {
         winningDiv.textContent = ''
         reachedFive.textContent = `${playerOneParticipant.textContent} WON THE GAME!!`
         playerOneScore = 0
+        playerTwoScore = 0
+        computerScore = 0
     } else if (playerTwoScore == 5 || computerScore == 5) {
         scoreOne.textContent = '0'
         scoreTwo.textContent = '0'
         winningDiv.textContent = ''
         reachedFive.textContent = `${playerTwoParticipant.textContent} WON THE GAME!!`
+        playerOneScore = 0
         playerTwoScore = 0
         computerScore = 0
     }
@@ -236,12 +239,12 @@ let computerDeclaration = (draw) => {
     if (draw) {
         winningDiv.textContent = 'Draw Game';
     } else if (checkAiWin(playerOne)) {
-        winningDiv.textContent = `${playerOneParticipant.textContent} Wins!`;
+        winningDiv.textContent = `${playerOneParticipant.textContent} Wins Round!`;
         cellElements.forEach((cell) => {
             cell.style.pointerEvents = 'none'
         })
     } else if (checkAiWin(computer)) {
-        winningDiv.textContent = `${playerTwoParticipant.textContent} Wins!`;
+        winningDiv.textContent = `${playerTwoParticipant.textContent} Wins Round!`;
         cellElements.forEach((cell) => {
             cell.style.pointerEvents = 'none'
         })
