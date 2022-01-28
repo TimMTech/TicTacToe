@@ -1,6 +1,6 @@
 const playerOne = 'X';
 const playerTwo = 'O';
-
+let mode = false;
 
 let playerOneScore = 0;
 let playerTwoScore = 0;
@@ -30,7 +30,7 @@ const reachedFive = document.querySelector('.reached-five')
 
 const gridArray = Array.from(cellElements);
 let circleTurn;
-let tracking = [1,2,3,4,5,6,7,8,9];
+let tracking = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
 let playerMarkStyle = (cell, color) => {
@@ -48,10 +48,10 @@ let getPlayerInfo = () => {
 
 let updateEntries = () => {
     playerOneEntry = document.getElementById('player-one').value
-        playerTwoEntry = document.getElementById('player-two').value
-        playerOneParticipant.textContent = playerOneEntry;
-        playerTwoParticipant.textContent = playerTwoEntry;
-        checkPlayerInfo()
+    playerTwoEntry = document.getElementById('player-two').value
+    playerOneParticipant.textContent = playerOneEntry;
+    playerTwoParticipant.textContent = playerTwoEntry;
+    checkPlayerInfo()
 }
 
 let checkPlayerInfo = () => {
@@ -69,6 +69,7 @@ let checkPlayerInfo = () => {
     }
 }
 
+// PLAYER VS PLAYER IMPLEMENTATION
 
 let handleClick = (e) => {
     const cell = e.target;
@@ -131,13 +132,13 @@ let checkWin = (player) => {
 let resetGame = () => {
     circleTurn = false;
     cellElements.forEach((cell) => {
-        cell.classList.remove(playerOne)
-        cell.classList.remove(playerTwo)
-        winningDiv.textContent = ''
-        reachedFive.textContent = ''
-        cell.textContent = '' 
-        cell.addEventListener('click', handleClick, { once: true })
-        cell.style.pointerEvents = 'auto'
+    cell.classList.remove(playerOne)
+    cell.classList.remove(playerTwo)
+    winningDiv.textContent = ''
+    reachedFive.textContent = ''
+    cell.textContent = ''
+    cell.addEventListener('click', handleClick, { once: true })
+    cell.style.pointerEvents = 'auto'
     })
 }
 
@@ -175,26 +176,26 @@ resetButton.addEventListener('click', resetGame)
 getPlayerInfo()
 
 // COMPUTER IMPLEMENTATION
-const computer = 'O';
 
-let computerPlayer = () => {
-    toggleAi.onclick = () => {
-        toggleAi.onclick = 'disabled'
-        computerDisplay()
-        versusComputer()
-        resetButton.addEventListener('click', resetComputerGame)
-    }
+let computer = 'C';
+
+ 
+toggleAi.onclick = () => {
+    toggleAi.onclick = 'disabled'
+    computerDisplay()
+    versusComputer();
+    resetButton.removeEventListener('click', resetGame);
+    resetButton.addEventListener('click', resetComputerGame)
 }
 
 let resetComputerGame = () => {
+    document.getElementById('toggle-ai').click()
     cellElements.forEach((cell) => {
-        cell.classList.remove(playerOne);
-        cell.classList.remove(computer);
         cell.textContent = ''
-        cell.addEventListener('click', playerMove, { once: true })
+        cell.style.pointerEvents = 'auto'
+        cell.style.pointerEvents = 'auto'
     })
 }
-
 
 let playerMove = (e) => {
     const cell = e.target;
@@ -203,28 +204,34 @@ let playerMove = (e) => {
     if (cell.classList.contains(computer)) {
         return;
     } else {
-    cell.classList.add(playerOne);
-    cell.textContent = playerOne;
-    playerMarkStyle(cell, 'red');
-    tracking.splice(spliceNr, 1);
+        cell.classList.add(playerOne);
+        cell.textContent = playerOne;
+        playerMarkStyle(cell, 'red');
+        tracking.splice(spliceNr, 1);
     }
-    if (checkWin(playerOne)) {
+    if (checkAiWin(playerOne)) {
         computerDeclaration(false)
         playerOneScore++
     } else if (computerDraw()) {
         computerDeclaration(true);
     } else {
-        computerMove()
+        computerMove();
     }
 }
 
 let computerDeclaration = (draw) => {
     if (draw) {
         winningDiv.textContent = 'Draw Game';
-    } else if (checkWin(playerOne)) {
+    } else if (checkAiWin(playerOne)) {
         winningDiv.textContent = `${playerOneParticipant.textContent} Wins!`;
-    } else if (checkWin(computer)) {
+        cellElements.forEach((cell) => {
+            cell.style.pointerEvents = 'none'
+        })
+    } else if (checkAiWin(computer)) {
         winningDiv.textContent = `${playerTwoParticipant.textContent} Wins!`;
+        cellElements.forEach((cell) => {
+            cell.style.pointerEvents = 'none'
+        })
     }
     winningDiv.classList.add('show')
 }
@@ -236,17 +243,25 @@ let computerDraw = () => {
     })
 }
 
-
 let computerMove = () => {
+    console.log('active function')
     const random = Math.floor(Math.random() * tracking.length);
     const computerIndex = tracking[random];
-    cellElements[computerIndex - 1].classList.add(computer);
+    cellElements[computerIndex - 1].classList.add(computer)
     cellElements[computerIndex - 1].textContent = computer;
     tracking.splice(random, 1);
     if (checkWin(computer)) {
         computerDeclaration(false)
         computerScore++
     }
+}
+
+let checkAiWin = (player) => {
+    return WINNING_COMBINATIONS.some((combination) => {
+        return combination.every((index) => {
+            return cellElements[index].classList.contains(player)
+        })
+    })
 }
 
 
@@ -282,14 +297,10 @@ let removePlayerTwo = () => {
 
 let versusComputer = () => {
     cellElements.forEach((cell) => {
-            cell.addEventListener('click', playerMove, { once: true })
-        })
-    }
+        cell.addEventListener('click', playerMove, { once: true })
+    })
+}
 
-
-
-
-computerPlayer()
 
 
 
