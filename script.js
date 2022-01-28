@@ -191,6 +191,7 @@ toggleAi.onclick = () => {
 let resetComputerGame = () => {
     document.getElementById('toggle-ai').click()
     cellElements.forEach((cell) => {
+        cell.classList.remove(playerOne, computer);
         cell.textContent = ''
         cell.style.pointerEvents = 'auto'
         cell.style.pointerEvents = 'auto'
